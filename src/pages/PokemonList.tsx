@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Pokemon from "../models/pokemon";
 import PokeCard from "../components/PokeCard";
 import PokemonSearch from "../components/PokemonSearch";
-import { useNavigate } from "react-router-dom";
 import PokemonService from "../services/pokemonService";
 
 type Props = {
@@ -14,19 +14,19 @@ export default function PokemonList({ pokemons, setPokemons }: Props) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
   const [borderColor, setBorderColor] = useState<string>("#948c8c");
- 
   const navigate = useNavigate();
 
   useEffect(() => {
-  // fetch("http://localhost:5173/pokemons")
-  // .then((res) => res.json())
-  // .then((data) => setPokemons(data))
-  // .catch((err) => console.error("Erreur fetch Pokémon :", err));
-  // }, [setPokemons]);
-  PokemonService.getPokemons()
-    .then((data) => setPokemons(data))
-    .catch((err) => console.error("Erreur fetch Pokémon :", err));
-}, [setPokemons]);
+    const fetchPokemons = async () => {
+      try {
+        const data = await PokemonService.getPokemons();
+        setPokemons(data);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des Pokémon :", err);
+      }
+    };
+    fetchPokemons();
+  }, [setPokemons]);
 
   const filteredPokemons = pokemons.filter((p) =>
     p.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -36,20 +36,15 @@ export default function PokemonList({ pokemons, setPokemons }: Props) {
     ? filteredPokemons.filter((pokemon) => pokemon.types.includes(selectedType))
     : filteredPokemons;
 
-  const handleRemovePokemon = (id: string) => {
-    // fetch(`http://localhost:5173/pokemons/${id}`, {
-    //   method: "DELETE",
-    // })
-    //   .then((res) => {
-    //     if (!res.ok) throw new Error("Erreur lors de la suppression");
-    //     setPokemons((prev) => prev.filter((p) => p.id !== id));
-    //   })
-    //   .catch((err) => console.error("Erreur DELETE :", err));
-    PokemonService.deletePokemon(Number(id))
-      .then(() => {
+  const handleRemovePokemon = async (id: string) => {
+    try {
+      const success = await PokemonService.deletePokemon(Number(id));
+      if (success) {
         setPokemons((prev) => prev.filter((p) => p.id !== id));
-      })
-      .catch((err) => console.error("Erreur DELETE :", err));
+      }
+    } catch (err) {
+      console.error("Erreur lors de la suppression du Pokémon :", err);
+    }
   };
 
   const handleGoToDetail = (id: string) => {
@@ -66,7 +61,10 @@ export default function PokemonList({ pokemons, setPokemons }: Props) {
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
         {filteredByType.map((pokemon) => (
-          <div key={pokemon.id} onClick={() => handleGoToDetail(pokemon.id)}>
+          <div
+            key={pokemon.id}
+            onClick={() => handleGoToDetail(String(pokemon.id))}
+          >
             <PokeCard
               pokemon={pokemon}
               borderColor={borderColor}

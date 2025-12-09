@@ -1,115 +1,96 @@
 import Pokemon from "../models/pokemon";
 
 export default class PokemonService {
+    private static readonly API_BASE_URL = "http://127.0.0.1:5173/api/pokemons";
+
+    private static getAuthHeaders(): Record<string, string> {
+        const token = localStorage.getItem("authToken");
+        return token ? { Authorization: `Bearer ${token}` } : {};
+    }
 
     static async getPokemons(): Promise<Pokemon[]> {
         try {
-            const token = localStorage.getItem("authToken");
-
-            const res = await fetch("http://127.0.0.1:5173/api/pokemons", {
-                headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+            const res = await fetch(this.API_BASE_URL, {
+                headers: this.getAuthHeaders(),
             });
-
             if (!res.ok) {
-                console.error("getPokemons failed", res.status);
-                return [];
+                throw new Error(`HTTP error! status: ${res.status}`);
             }
-
             return (await res.json()) as Pokemon[];
         } catch (err) {
-            console.error("getPokemons error", err);
+            console.error("Failed to fetch pokemons:", err);
             return [];
         }
     }
 
     static async getPokemon(id: number): Promise<Pokemon | null> {
         try {
-            const token = localStorage.getItem("authToken");
-
-            const res = await fetch(`http://127.0.0.1:5173/api/pokemons/${id}`, {
-                headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+            const res = await fetch(`${this.API_BASE_URL}/${id}`, {
+                headers: this.getAuthHeaders(),
             });
-
             if (!res.ok) {
-                console.error("getPokemon failed", res.status);
-                return null;
+                throw new Error(`HTTP error! status: ${res.status}`);
             }
-
             const data = await res.json();
-            return Object.keys(data).length === 0 ? null : data;
+            return Object.keys(data).length > 0 ? data : null;
         } catch (err) {
-            console.error("getPokemon error", err);
+            console.error(`Failed to fetch pokemon ${id}:`, err);
             return null;
         }
     }
 
     static async deletePokemon(id: number): Promise<boolean> {
         try {
-            const token = localStorage.getItem("authToken");
-
-            const res = await fetch(`http://127.0.0.1:5173/api/pokemons/${id}`, {
+            const res = await fetch(`${this.API_BASE_URL}/${id}`, {
                 method: "DELETE",
-                headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+                headers: this.getAuthHeaders(),
             });
-
             if (!res.ok) {
-                console.error("deletePokemon failed", res.status);
-                return false;
+                throw new Error(`HTTP error! status: ${res.status}`);
             }
-
             return true;
         } catch (err) {
-            console.error("deletePokemon error", err);
+            console.error(`Failed to delete pokemon ${id}:`, err);
             return false;
         }
     }
 
     static async addPokemon(pokemon: Pokemon): Promise<Pokemon | null> {
         try {
-            const token = localStorage.getItem("authToken");
-
-            const res = await fetch("http://127.0.0.1:5173/api/pokemons", {
+            const res = await fetch(this.API_BASE_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    ...this.getAuthHeaders(),
                 },
                 body: JSON.stringify(pokemon),
             });
-
             if (!res.ok) {
-                console.error("addPokemon failed", res.status);
-                return null;
+                throw new Error(`HTTP error! status: ${res.status}`);
             }
-
             return (await res.json()) as Pokemon;
         } catch (err) {
-            console.error("addPokemon error", err);
+            console.error("Failed to add pokemon:", err);
             return null;
         }
     }
 
     static async updatePokemon(pokemon: Pokemon): Promise<Pokemon | null> {
         try {
-            const token = localStorage.getItem("authToken");
-
-            const res = await fetch(`http://127.0.0.1:5173/api/pokemons/${pokemon.id}`, {
+            const res = await fetch(`${this.API_BASE_URL}/${pokemon.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    ...this.getAuthHeaders(),
                 },
                 body: JSON.stringify(pokemon),
             });
-
             if (!res.ok) {
-                console.error("updatePokemon failed", res.status);
-                return null;
+                throw new Error(`HTTP error! status: ${res.status}`);
             }
-
             return (await res.json()) as Pokemon;
         } catch (err) {
-            console.error("updatePokemon error", err);
+            console.error(`Failed to update pokemon ${pokemon.id}:`, err);
             return null;
         }
     }
