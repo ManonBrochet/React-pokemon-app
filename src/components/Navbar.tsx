@@ -1,19 +1,16 @@
-function Navbar() {
+import React from "react";
+import { Link } from "react-router-dom";
+
+const Navbar: React.FC = () => {
     return (
-        <nav className="bg-black center shadow dark:bg-gray-800">
-            <div className="container flex items-center justify-center p-6 mx-auto text-white capitalize">React Pokemon App
-                
-                <a href="#" className="text-white-800 dark:text-gray-200 border-b-2 border-blue-500 mx-1.5 sm:mx-6">Accueil</a>
-
-                <a href="#" className="border-b-2 border-transparent hover:text-gray-800 dark:hover:text-gray-200 hover:border-blue-500 mx-1.5 sm:mx-6">Services</a>
-
-                <a href="#" className="border-b-2 border-transparent hover:text-gray-800 dark:hover:text-gray-200 hover:border-blue-500 mx-1.5 sm:mx-6">A propos</a>
-
-                <a href="#" className="border-b-2 border-transparent hover:text-gray-800 dark:hover:text-gray-200 hover:border-blue-500 mx-1.5 sm:mx-6">Contact</a>
-
-            </div>
+        <nav style={{ padding: "1rem", background: "#eee" }}>
+            <Link to="/" style={{ marginRight: "1rem" }}>Accueil</Link>
+            <Link to="/PokemonList" style={{ marginRight: "1rem" }}>Pokémon</Link>
+            <Link to="/pokemonAdd" style={{marginRight: "1rem" }}> Ajouter un Pokémon</Link>
+            <Link to="/about" style={{ marginRight: "1rem" }}>À propos</Link>
+            <Link to="/contact" style={{ marginRight: "1rem" }}>Contact</Link>
         </nav>
-    )
-}
+    );
+};
 
 export default Navbar;

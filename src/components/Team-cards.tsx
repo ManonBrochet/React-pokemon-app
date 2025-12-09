@@ -26,7 +26,7 @@ export default function TeamCards() {
         else return "bg-gray-300";
     }
 
-    function deletePokemon(id: number) {
+    function removePokemon(id: number) {
         setPokemons(pokemons.filter(p => p.id !== id));
     }
 
@@ -41,7 +41,7 @@ export default function TeamCards() {
                             <h2 className="text-xs text-center font-bold text-black px-1 py-1 rounded-lg">
                                 {pokemon.types.join(", ")}
                             </h2>
-                            <ImCross className="place-self-center" onClick={() => deletePokemon(pokemon.id)} />
+                            <ImCross className="place-self-center" onClick={() => removePokemon(pokemon.id)} />
                             <CiLink className="place-self-center" />
                         </h1>
                     </div>
