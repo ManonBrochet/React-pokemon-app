@@ -77,7 +77,7 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
                         return;
                     }
                     console.log('✅ Vous êtes maintenant connecté.');
-                    navigate('/PokemonList');
+                    navigate('/pokemonList');
                 });
         }
     }
