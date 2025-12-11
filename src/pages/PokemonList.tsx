@@ -1,76 +1,61 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Pokemon from "../models/pokemon";
 import PokemonService from "../services/pokemonService";
+import PokeCard from "../components/PokeCard";
 
 type Props = {
   pokemons: Pokemon[];
-  setPokemons: React.Dispatch<React.SetStateAction<Pokemon[]>>;
+  setPokemons: (pokemons: Pokemon[]) => void;
 };
 
-export default function PokemonList({ pokemons, setPokemons }: Props) {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedType, setSelectedType] = useState<string>("");
-  const [borderColor, setBorderColor] = useState<string>("#948c8c");
-  const navigate = useNavigate();
+const PokemonList = ({ pokemons, setPokemons }: Props) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchPokemons = async () => {
-      try {
-        const data = await PokemonService.getPokemons();
-        setPokemons(data);
-      } catch (err) {
-        console.error("Erreur lors de la récupération des Pokémon :", err);
-      }
-    };
-    fetchPokemons();
-  }, [setPokemons]);
-
-  const filteredPokemons = pokemons.filter((p) =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const filteredByType = selectedType
-    ? filteredPokemons.filter((pokemon) => pokemon.types.includes(selectedType))
-    : filteredPokemons;
-
-  const handleRemovePokemon = async (id: string) => {
+  const fetchPokemons = async () => {
     try {
-      const success = await PokemonService.deletePokemon(Number(id));
-      if (success) {
-        setPokemons((prev) => prev.filter((p) => p.id !== id));
-      }
+      setLoading(true);
+      setError("");
+
+      const data = await PokemonService.getPokemons();
+      console.log("API pokemons:", data);
+
+      setPokemons(data);
     } catch (err) {
-      console.error("Erreur lors de la suppression du Pokémon :", err);
+      console.error("Failed to fetch pokemons:", err);
+      setError("Impossible de charger les Pokémon");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoToDetail = (id: string) => {
-    navigate(`/PokemonDetail/${id}`);
+  const handleRemovePokemon = (id: string) => {
+    setPokemons(pokemons.filter((p) => p.id !== id));
   };
 
+  useEffect(() => {
+    fetchPokemons();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center text-white">Chargement des Pokémon...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center text-red-500">{error}</p>;
+  }
+
   return (
-    <>
-      <PokemonSearch
-        onSearchChange={setSearchQuery}
-        onTypeChange={setSelectedType}
-        query={searchQuery}
-        selectedType={selectedType}
-      />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
-        {filteredByType.map((pokemon) => (
-          <div
-            key={pokemon.id}
-            onClick={() => handleGoToDetail(String(pokemon.id))}
-          >
-            <PokeCard
-              pokemon={pokemon}
-              borderColor={borderColor}
-              removePokemon={handleRemovePokemon}
-            />
-          </div>
-        ))}
-      </div>
-    </>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {pokemons.map((pokemon) => (
+        <PokeCard
+          key={pokemon.id}
+          pokemon={pokemon}
+          removePokemon={handleRemovePokemon}
+        />
+      ))}
+    </div>
   );
-}
+};
+
+export default PokemonList;
