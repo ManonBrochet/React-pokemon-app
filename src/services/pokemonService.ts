@@ -1,7 +1,7 @@
 import Pokemon from "../models/pokemon";
 
 export default class PokemonService {
-    private static readonly API_BASE_URL = "http://127.0.0.1:5173/api/pokemons";
+    private static readonly API_BASE_URL = "http://localhost:8000/api/pokemons";
 
     private static getAuthHeaders(): Record<string, string> {
         const token = localStorage.getItem("authToken");

@@ -21,7 +21,6 @@ use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Bundle\SecurityBundle\Security\LazyFirewallContext;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage as BaseExpressionLanguage;
-use Symfony\Component\Ldap\Security\LdapUserProvider;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -258,19 +257,6 @@ return static function (ContainerConfigurator $container) {
             ->abstract()
 
         ->set('security.user.provider.ldap', LdapUserProvider::class)
-            ->abstract()
-            ->args([
-                abstract_arg('security.ldap.ldap'),
-                abstract_arg('base dn'),
-                abstract_arg('search dn'),
-                abstract_arg('search password'),
-                abstract_arg('default_roles'),
-                abstract_arg('uid key'),
-                abstract_arg('filter'),
-                abstract_arg('password_attribute'),
-                abstract_arg('extra_fields (email etc)'),
-            ])
-
         ->set('security.user.provider.chain', ChainUserProvider::class)
             ->abstract()
 

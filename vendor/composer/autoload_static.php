@@ -70,6 +70,10 @@ class ComposerStaticInit5c41e0863668f7814915d73505cec39a
             'Psr\\Cache\\' => 10,
             'PhpParser\\' => 10,
         ),
+        'N' => 
+        array (
+            'Nelmio\\CorsBundle\\' => 18,
+        ),
         'L' => 
         array (
             'Lexik\\Bundle\\JWTAuthenticationBundle\\' => 37,
@@ -270,6 +274,10 @@ class ComposerStaticInit5c41e0863668f7814915d73505cec39a
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'Nelmio\\CorsBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nelmio/cors-bundle',
         ),
         'Lexik\\Bundle\\JWTAuthenticationBundle\\' => 
         array (
