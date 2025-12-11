@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Pokemon from "../models/pokemon";
-import PokeCard from "../components/PokeCard";
-import PokemonSearch from "../components/PokemonSearch";
 import PokemonService from "../services/pokemonService";
 
 type Props = {
