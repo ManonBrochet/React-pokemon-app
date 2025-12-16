@@ -55,7 +55,7 @@ const Login = () => {
           <div className="bg-gradient-to-r from-red-500 to-red-600 p-8 text-center relative">
             <div className="absolute top-2 right-2">
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-2xl">⚡</span>
+                <span className="text-2xl"></span>
               </div>
             </div>
             <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
@@ -71,7 +71,7 @@ const Login = () => {
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg animate-shake">
                 <div className="flex items-center">
-                  <span className="text-2xl mr-3">⚠️</span>
+                  <span className="text-2xl mr-3"></span>
                   <p className="text-red-700 font-medium text-sm">{error}</p>
                 </div>
               </div>
@@ -96,7 +96,7 @@ const Login = () => {
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none transition-all disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-800 font-medium"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xl">
-                  📧
+                  
                 </span>
               </div>
             </div>
@@ -120,7 +120,7 @@ const Login = () => {
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none transition-all disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-800 font-medium"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xl">
-                  🔒
+                  
                 </span>
               </div>
             </div>
@@ -131,7 +131,7 @@ const Login = () => {
               className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none uppercase tracking-wide text-lg relative overflow-hidden group"
             >
               <span className="relative z-10">
-                {isLoading ? '⚡ Connexion...' : '🎮 Se connecter'}
+                {isLoading ? ' Connexion...' : ' Se connecter'}
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
             </button>
@@ -141,7 +141,7 @@ const Login = () => {
                 href="#"
                 className="text-sm text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-colors"
               >
-                Mot de passe oublié ? 🤔
+                Mot de passe oublié ? 
               </a>
             </div>
           </form>
@@ -150,7 +150,7 @@ const Login = () => {
             <p className="text-sm text-gray-600">
               Pas encore de compte ?{' '}
               <a href="#" className="text-blue-600 font-bold hover:underline">
-                Inscrivez-vous ici ! ✨
+                Inscrivez-vous ici ! 
               </a>
             </p>
           </div>

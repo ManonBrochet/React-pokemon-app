@@ -37,9 +37,18 @@ export default function PokemonDetail({ pokemons, setPokemons }: Props) {
 
   const allTypes = Array.from(
     new Set(
-      pokemons.flatMap((p) =>
-        Array.isArray(p.types) ? p.types : p.types ? [p.types as unknown as string] : []
-      )
+      pokemons.flatMap((p) => {
+        const rawTypes = p.types as unknown as string | string[];
+        if (Array.isArray(rawTypes)) return rawTypes;
+        if (rawTypes) {
+          try {
+            return JSON.parse(rawTypes);
+          } catch {
+            return [];
+          }
+        }
+        return [];
+      })
     )
   ).sort();
 
@@ -51,8 +60,24 @@ export default function PokemonDetail({ pokemons, setPokemons }: Props) {
       setError("Pokémon introuvable");
       return;
     }
-    setPokemon(found);
-    setEditedPokemon({ ...found });
+
+    const rawTypes = found.types as unknown as string | string[];
+    let parsedTypes: string[] = [];
+
+    if (Array.isArray(rawTypes)) {
+      parsedTypes = rawTypes;
+    } else if (rawTypes) {
+      try {
+        parsedTypes = JSON.parse(rawTypes);
+      } catch {
+        parsedTypes = [];
+      }
+    }
+
+    const normalized = { ...found, types: parsedTypes as unknown as string[] };
+
+    setPokemon(normalized);
+    setEditedPokemon(normalized);
   }, [id, pokemons]);
 
   if (error) {
@@ -74,9 +99,7 @@ export default function PokemonDetail({ pokemons, setPokemons }: Props) {
   }
 
   const safeTypes = Array.isArray(pokemon.types)
-    ? pokemon.types
-    : pokemon.types
-    ? [pokemon.types as unknown as string]
+    ? (pokemon.types as unknown as string[])
     : [];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,9 +116,7 @@ export default function PokemonDetail({ pokemons, setPokemons }: Props) {
 
   const handleTypeChange = (type: string) => {
     const currentTypes = Array.isArray(editedPokemon.types)
-      ? editedPokemon.types
-      : editedPokemon.types
-      ? [editedPokemon.types as unknown as string]
+      ? (editedPokemon.types as unknown as string[])
       : [];
 
     if (currentTypes.includes(type)) {
@@ -116,16 +137,45 @@ export default function PokemonDetail({ pokemons, setPokemons }: Props) {
 
     setError("");
 
-    const updated = await PokemonService.updatePokemon(editedPokemon);
+    const typesArray = Array.isArray(editedPokemon.types)
+      ? (editedPokemon.types as unknown as string[])
+      : [];
+
+    const payload: Pokemon = {
+      ...editedPokemon,
+      types: JSON.stringify(typesArray) as unknown as string[],
+    };
+
+    const updated = await PokemonService.updatePokemon(payload);
 
     if (!updated) {
       setError("Impossible d’enregistrer les modifications (API).");
       return;
     }
 
-    setPokemons((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
-    setPokemon(updated);
-    setEditedPokemon(updated);
+    const rawTypes = updated.types as unknown as string | string[];
+    let parsedTypes: string[] = [];
+
+    if (Array.isArray(rawTypes)) {
+      parsedTypes = rawTypes;
+    } else if (rawTypes) {
+      try {
+        parsedTypes = JSON.parse(rawTypes);
+      } catch {
+        parsedTypes = [];
+      }
+    }
+
+    const normalizedUpdated = {
+      ...updated,
+      types: parsedTypes as unknown as string[],
+    };
+
+    setPokemons((prev) =>
+      prev.map((p) => (p.id === normalizedUpdated.id ? normalizedUpdated : p))
+    );
+    setPokemon(normalizedUpdated);
+    setEditedPokemon(normalizedUpdated);
     setIsEditing(false);
     navigate("/pokemonList");
   };
@@ -216,9 +266,7 @@ export default function PokemonDetail({ pokemons, setPokemons }: Props) {
             <legend className="font-semibold mb-2">Types</legend>
             {allTypes.map((type) => {
               const currentTypes = Array.isArray(editedPokemon.types)
-                ? editedPokemon.types
-                : editedPokemon.types
-                ? [editedPokemon.types as unknown as string]
+                ? (editedPokemon.types as unknown as string[])
                 : [];
               return (
                 <label
