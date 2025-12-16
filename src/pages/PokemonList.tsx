@@ -5,7 +5,7 @@ import PokeCard from "../components/PokeCard";
 
 type Props = {
   pokemons: Pokemon[];
-  setPokemons: (pokemons: Pokemon[]) => void;
+  setPokemons: React.Dispatch<React.SetStateAction<Pokemon[]>>;
 };
 
 const PokemonList = ({ pokemons, setPokemons }: Props) => {
@@ -30,11 +30,12 @@ const PokemonList = ({ pokemons, setPokemons }: Props) => {
   };
 
   const handleRemovePokemon = (id: string) => {
-    setPokemons(pokemons.filter((p) => p.id !== id));
+    setPokemons((prev) => prev.filter((p) => String(p.id) !== String(id)));
   };
 
   useEffect(() => {
     fetchPokemons();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {

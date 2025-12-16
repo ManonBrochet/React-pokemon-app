@@ -9,79 +9,38 @@ export default class PokemonService {
   }
 
   static async getPokemons(): Promise<Pokemon[]> {
-    try {
-      const res = await fetch(this.API_BASE_URL, {
-        headers: this.getAuthHeaders(),
-      });
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      return (await res.json()) as Pokemon[];
-    } catch (err) {
-      console.error("Failed to fetch pokemons:", err);
-      return [];
-    }
+    const res = await fetch(this.API_BASE_URL, { headers: this.getAuthHeaders() });
+    return await res.json();
   }
 
-  static async deletePokemon(id: string): Promise<boolean> {
-    try {
-      const res = await fetch(`${this.API_BASE_URL}/${id}`, {
-        method: "DELETE",
-        headers: this.getAuthHeaders(),
-      });
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      return true;
-    } catch (err) {
-      console.error(`Failed to delete pokemon ${id}:`, err);
-      return false;
-    }
+  static async getPokemon(id: string): Promise<Pokemon | null> {
+    const res = await fetch(`${this.API_BASE_URL}/${id}`, { headers: this.getAuthHeaders() });
+    return await res.json();
   }
 
   static async addPokemon(pokemon: Pokemon): Promise<Pokemon | null> {
-    try {
-      const res = await fetch(this.API_BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...this.getAuthHeaders(),
-        },
-        body: JSON.stringify(pokemon),
-      });
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      return (await res.json()) as Pokemon;
-    } catch (err) {
-      console.error("Failed to add pokemon:", err);
-      return null;
-    }
+    const res = await fetch(this.API_BASE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
+      body: JSON.stringify(pokemon),
+    });
+    return await res.json();
   }
 
   static async updatePokemon(pokemon: Pokemon): Promise<Pokemon | null> {
-    try {
-      const res = await fetch(`${this.API_BASE_URL}/${pokemon.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          ...this.getAuthHeaders(),
-        },
-        body: JSON.stringify(pokemon),
-      });
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      return (await res.json()) as Pokemon;
-    } catch (err) {
-      console.error(`Failed to update pokemon ${pokemon.id}:`, err);
-      return null;
-    }
+    const res = await fetch(`${this.API_BASE_URL}/${pokemon.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...this.getAuthHeaders() },
+      body: JSON.stringify(pokemon),
+    });
+    return await res.json();
   }
 
-  static searchPokemons(query: string, pokemons: Pokemon[]): Pokemon[] {
-    return pokemons.filter((pokemon) =>
-      pokemon.name.toLowerCase().includes(query.toLowerCase())
-    );
+  static async deletePokemon(id: string): Promise<boolean> {
+    const res = await fetch(`${this.API_BASE_URL}/${id}`, {
+      method: "DELETE",
+      headers: this.getAuthHeaders()
+    });
+    return res.ok;
   }
 }

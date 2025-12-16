@@ -123,7 +123,6 @@ export default function PokemonDetail({ pokemons, setPokemons }: Props) {
       return;
     }
 
-    // maj front
     setPokemons((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
     setPokemon(updated);
     setEditedPokemon(updated);

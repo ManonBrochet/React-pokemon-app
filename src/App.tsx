@@ -12,13 +12,13 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
-import POKEMONS from "./models/mock-pokemon";
 import Pokemon from "./models/pokemon";
 import PokemonAdd from "./pages/pokemonAdd";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const [pokemons, setPokemons] = useState<Pokemon[]>(POKEMONS);
+  // Laisse l’API remplir la liste
+  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
 
   return (
     <>
